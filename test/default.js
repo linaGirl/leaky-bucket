@@ -94,7 +94,7 @@
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 10500
-                , minTime       = 9000
+                , minTime       = 9500
                 , capacity      = 60
                 , items         = 70
                 , iterator      = items
@@ -133,7 +133,7 @@
         it('should not execute all items immediatelly if there is not enough capacity III', function(done) {
             var   start         = Date.now()
                 , executed      = 0
-                , maxTime       = 6000
+                , maxTime       = 5500
                 , minTime       = 4500
                 , capacity      = 60
                 , items         = 70
