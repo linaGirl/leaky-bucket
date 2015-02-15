@@ -22,7 +22,9 @@ This module uses [sematic versioning](http://semver.org/)
 
 The constructor accepts three parameters, all are optional
 
-    var instance = new LeakyBucket([capacity = 60][, Interval = 60][, maxWaitingTime = 300]);
+    var instance = new LeakyBucket([capacity = 60]
+                                   [, Interval = 60]
+                                   [, maxWaitingTime = 300]);
 
 
 Create a new leaky bucket which is allowed to execute 120 items per minute
@@ -40,7 +42,7 @@ Create a new leaky bucket which is allowed to execute 200 items every 30 seconds
     var bucket = new LeakyBucket(200, 30, 60);
 
 
-You may also use an options object instead of the eparameters
+You may also use an options object instead of the parameters
 
     var bucket = new LeakyBucket({
           capacity: 200         // items per interval, defaults to 60
@@ -84,7 +86,7 @@ Throttle an using Promises
     bucket.throttle().then(function() {
         // ok, do your stuff ...
     }).catch(function(err) {
-        // max waiting time exceeded, dont execute anythig
+        // max waiting time exceeded, dont execute anything
     });
 
 
@@ -134,7 +136,7 @@ Rate limit API calls on the server side, allowed are no more than 60 requests pe
     bucket = new LeakyBucket(60, 60, 0);
 
 
-    // this let pass all request that are within the liimt and fail all that
+    // this lets pass all request that are within the limit and fail all that
     // exceed it
     bucket.throttle(function(err) {
         if (err) response.send(429, 'too many requests!');
