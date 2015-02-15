@@ -1,7 +1,7 @@
 {
       "name"                        : "leaky-bucket"
     , "description"                 : "A fast and efficient leaky bucket implementation"
-    , "version"                     : "0.1.7"
+    , "version"                     : "0.1.8"
     , "homepage"                    : "https://github.com/eventEmitter/leaky-bucket"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)" 
     , "licence"                     : "mit"

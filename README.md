@@ -42,7 +42,7 @@ The throttle accepts two parameters, of which the first is optional
 
     bucktet.throttle([cost], callback);
 
-The cost parameter can be used to let items cost more than other. The cost of one item defaults to 1. If you execvute an item with the cost of 2 it will use 2 slots instead of one.
+The cost parameter can be used to let items cost more than other. The cost of one item defaults to 1. If you execute an item with the cost of 2 it will use 2 slots instead of one.
 
 
 Throttle an item
@@ -61,7 +61,7 @@ Throttle an item with the cost of 10
 
 ### Flags
 
-You may start your app using the debug-leaky-bucket flag, this will enable logging of the module
+You may start your app using the debug-leaky-bucket flag, this will enable logging for the module
 
     node . --debug-leaky-bucket
 
