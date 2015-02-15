@@ -2,7 +2,7 @@
 
 A fast and efficient leaky bucket implementation
 
-this module is versioned using [sematic versioning](http://semver.org/)
+This module uses [sematic versioning](http://semver.org/)
 
 ## installation
 
