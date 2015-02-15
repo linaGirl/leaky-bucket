@@ -4,7 +4,7 @@
 		, log 			= require('ee-log')
 		, assert 		= require('assert');
 
-	
+
 	//process.env['debug-leaky-bucket'] = true;
 
 	var   LeakyBucket = require('../');
@@ -37,7 +37,7 @@
 				if (++executed === items) {
 					duration = Date.now()-start;
 
-					assert(duration>=minTime);
+					assert(duration>=minTime, '');
 					assert(duration<maxTime);
 
 					done();
@@ -74,8 +74,8 @@
 				if (++executed === items) {
 					duration = Date.now()-start;
 
-					assert(duration>=minTime);
-					assert(duration<maxTime);
+					assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' >= '+minTime+') ...');
+					assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' < '+maxTime+') ...');
 
 					done();
 				}
@@ -111,8 +111,8 @@
 				if (++executed === items) { 
 					duration = Date.now()-start;
 
-					assert(duration>=minTime);
-					assert(duration<maxTime);
+					assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' >= '+minTime+') ...');
+					assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' < '+maxTime+') ...');
 
 					done();
 				}
@@ -151,8 +151,8 @@
 				if (++executed === items) { 
 					duration = Date.now()-start;
 
-					assert(duration>=minTime);
-					assert(duration<maxTime);
+					assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' >= '+minTime+') ...');
+					assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' < '+maxTime+') ...');
 
 					done();
 				}
