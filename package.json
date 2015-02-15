@@ -1,0 +1,32 @@
+{
+      "name"                        : "leaky-bucket"
+    , "description"                 : "A fast and efficient leaky bucket implementation"
+    , "version"                     : "0.1.1"
+    , "homepage"                    : "https://github.com/eventEmitter/leaky-bucket"
+    , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)" 
+    , "licence"                     : "mit"
+    , "repository": {
+          "url"                     : "https://github.com/eventEmitter/leaky-bucket.git"
+        , "type"                    : "git"
+    }
+    , "engines": {
+        "node"                      : ">=v0.10.17"
+    }
+    , "bugs": {
+        "url"                       : "https://github.com/eventEmitter/leaky-bucket/issues"
+    }
+    , "dependencies": {
+          "ee-class"                : "1.0.x"
+        , "ee-types"                : "0.1.x"
+        , "ee-log"                  : "0.3.x"
+        , "ee-argv"                 : "0.1.x"
+    }
+    , "devDependencies": {
+          "mocha"                   : "1.17.x"
+    }
+    , "optionalDependencies": {}
+    , "keywords"                    : ["leaky-bucket", "leaky", "bucket"]
+    , "scripts": {
+        "test"                      : "./node_modules/mocha/bin/mocha --reporter spec"
+    }
+}
