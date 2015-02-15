@@ -20,9 +20,9 @@ This module uses [sematic versioning](http://semver.org/)
 
 ### Constructor
 
-The constructor accpets two parameter, both are optional
+The constructor accepts three parameters, all are optional
 
-    var instance = new LeakyBucket([ItemsPerInterval = 60][, Interval = 60]);
+    var instance = new LeakyBucket([capacity = 60][, Interval = 60][, maxWaitingTime = 300]);
 
 
 Create a new leaky bucket which is allowed to execute 120 items per minute
@@ -35,10 +35,30 @@ Create a new leaky bucket which is allowed to execute 200 items every 30 seconds
     var bucket = new LeakyBucket(200, 30);
 
 
+Create a new leaky bucket which is allowed to execute 200 items every 30 seconds with a maxWaitingTime of 60 seconds
+
+    var bucket = new LeakyBucket(200, 30, 60);
+
+
+You may also use an options object instead of the eparameters
+
+    var bucket = new LeakyBucket({
+          capacity: 200         // items per interval, defaults to 60
+        , iterval: 30           // seconds, defaults to 60
+        , maxWaitingTime: 60    // seconds, defaults to 300
+    });
+
+
 
 ### Throttling
 
-The throttle accepts two parameters, of which the first is optional
+The throttle accepts two parameters, of which both are optional
+
+- The first parameter can either be a callback function or the cost of the opertion
+- The seocnd parameter can be the callback function
+
+If you do not pass a callabck a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed becuas the max waiting time was exceeded.
+
 
     bucktet.throttle([cost], callback);
 
@@ -47,15 +67,24 @@ The cost parameter can be used to let items cost more than other. The cost of on
 
 Throttle an item
 
-    bucket.throttle(function() {
+    bucket.throttle(function(err) {
         // do something
     });
 
 
 Throttle an item with the cost of 10
 
-    bucket.throttle(10, function() {
+    bucket.throttle(10, function(err) {
         // do something
+    });
+
+
+Throttle an using Promises
+
+    bucket.throttle().then(function() {
+        // ok, do your stuff ...
+    }).catch(function(err) {
+        // max waiting time exceeded, dont execute anythig
     });
 
 
@@ -68,7 +97,7 @@ You may start your app using the debug-leaky-bucket flag, this will enable loggi
 
 ## Examples
 
-Rate limit API calls, allowed are no more than 60 requests per second
+Rate limit API calls on the client side, allowed are no more than 60 requests per minute
 
     var   LeakyBucket = require('leaky-bucket')
         , request     = require('request')
@@ -89,4 +118,25 @@ Rate limit API calls, allowed are no more than 60 requests per second
         }, function(err, response, body) {
 
         });
+    });
+
+
+
+
+Rate limit API calls on the server side, allowed are no more than 60 requests per minute
+
+    var   LeakyBucket = require('leaky-bucket')
+        , request     = require('request')
+        , bucket;
+
+
+    // create bucket instance, 60 request per minute, max waiting time = 0
+    bucket = new LeakyBucket(60, 60, 0);
+
+
+    // this let pass all request that are within the liimt and fail all that
+    // exceed it
+    bucket.throttle(function(err) {
+        if (err) response.send(429, 'too many requests!');
+        else response.send(200, '{id:4, ...}')
     });

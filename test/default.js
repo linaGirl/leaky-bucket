@@ -163,5 +163,86 @@
 
             while(iterator--) bucket.throttle(cb);
         });
+
+    
+
+
+
+        it('should abort items that exceed the max waiting time', function(done) {
+            var   start         = Date.now()
+                , executed      = 0
+                , maxTime       = 11500
+                , minTime       = 10500
+                , capacity      = 60
+                , items         = 100
+                , iterator      = items
+                , cb, bucket;
+
+
+            // wait fo rthe bucket
+            this.timeout(15000);
+
+
+            cb = function() {
+                var duration;
+
+                if (++executed === items) { 
+                    duration = Date.now()-start;
+
+                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+
+                    done();
+                }
+            }
+
+
+            bucket = new LeakyBucket(capacity, 60, 10);
+
+            while(iterator--) bucket.throttle(cb);
+        });
+
+    
+
+
+
+        it('should work using promises', function(done) {
+            var   start         = Date.now()
+                , executed      = 0
+                , maxTime       = 11500
+                , minTime       = 10500
+                , capacity      = 60
+                , items         = 100
+                , errCount      = 0
+                , expectedErrCount = 29
+                , iterator      = items
+                , cb, bucket;
+
+
+            // wait fo rthe bucket
+            this.timeout(15000);
+
+
+            cb = function(err) {
+                var duration;
+
+                if (err) errCount++;
+
+                if (++executed === items) { 
+                    duration = Date.now()-start;
+
+                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+errCount+' errros, it emitted '+expectedErrCount+' errors...');
+
+                    done();
+                }
+            }
+
+
+            bucket = new LeakyBucket(capacity, 60, 10);
+
+            while(iterator--) bucket.throttle().then(cb).catch(cb);
+        });
     });
     
