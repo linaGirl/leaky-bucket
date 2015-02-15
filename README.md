@@ -22,7 +22,7 @@ This module uses [sematic versioning](http://semver.org/)
 
 The constructor accpets two parameter, both are optional
 
-    var instance = new LeakyBucket([RequestsPerInterval = 60][, Interval = 60]);
+    var instance = new LeakyBucket([ItemsPerInterval = 60][, Interval = 60]);
 
 
 Create a new leaky bucket which is allowed to execute 120 items per minute
@@ -30,7 +30,7 @@ Create a new leaky bucket which is allowed to execute 120 items per minute
     var bucket = new LeakyBucket(120);
 
 
-Create a new leaky bucket which is allowed to execute 120 items every 30 seconds
+Create a new leaky bucket which is allowed to execute 200 items every 30 seconds
 
     var bucket = new LeakyBucket(200, 30);
 
@@ -70,13 +70,19 @@ You may start your app using the debug-leaky-bucket flag, this will enable loggi
 
 Rate limit API calls, allowed are no more than 60 requests per second
 
-    var bucket = new LeakyBucket(60);
+    var   LeakyBucket = require('leaky-bucket')
+        , request     = require('request')
+        , bucket;
+
+
+    // create bucket instance, 60 request per minute
+    bucket = new LeakyBucket(60);
 
 
     // this will throttle request if required
     bucket.throttle(function() {
 
-        // execute request
+        // execute request using the request module
         request({
               method: 'get'
             , url: 'http://awesome.api/win'
