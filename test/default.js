@@ -203,6 +203,97 @@
             while(iterator--) bucket.throttle(cb);
         });
 
+    
+
+
+
+        it('should abort items that exceed the max waiting time after a pause', function(done) {
+            var   start         = Date.now()
+                , executed      = 0
+                , maxTime       = 5500
+                , minTime       = 4500
+                , capacity      = 60
+                , items         = 65
+                , iterator      = items
+                , errCount      = 0
+                , expectedErrCount = 3
+                , cb, bucket;
+
+
+            // wait fo rthe bucket
+            this.timeout(15000);
+
+
+            cb = function(err) {
+                var duration;
+
+                if (err) errCount++;
+
+                if (++executed === items) { 
+                    duration = Date.now()-start;
+
+                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
+
+                    done();
+                }
+            }
+
+
+            bucket = new LeakyBucket(capacity, 60, 5);
+
+            while(iterator--) bucket.throttle(cb);
+
+            bucket.pause(3);
+        });
+
+
+
+
+
+
+        it('should abort items that exceed the max waiting time after a pause with a non default interval', function(done) {
+            var   start         = Date.now()
+                , executed      = 0
+                , maxTime       = 10500
+                , minTime       = 9500
+                , capacity      = 60
+                , items         = 100
+                , iterator      = items
+                , errCount      = 0
+                , expectedErrCount = 30
+                , cb, bucket;
+
+
+            // wait fo rthe bucket
+            this.timeout(15000);
+
+
+            cb = function(err) {
+                var duration;
+
+                if (err) errCount++;
+
+                if (++executed === items) { 
+                    duration = Date.now()-start;
+
+                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
+
+                    done();
+                }
+            }
+
+
+            bucket = new LeakyBucket(capacity, 30, 10);
+
+            while(iterator--) bucket.throttle(cb);
+
+            bucket.pause(5);
+        });
+
 
 
 
@@ -277,7 +368,7 @@
 
                         assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
                         assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
-                        assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+errCount+' errros, it emitted '+expectedErrCount+' errors...');
+                        assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
 
                         done();
                     }
