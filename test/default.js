@@ -222,6 +222,10 @@
             // wait fo rthe bucket
             this.timeout(15000);
 
+            setTimeout(function() {
+                log.warn(executed, errCount);
+            }, 12000);
+
 
             cb = function(err) {
                 var duration;
@@ -236,7 +240,7 @@
                     assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+errCount+' errros, it emitted '+expectedErrCount+' errors...');
 
                     done();
-                }
+                }                
             }
 
 
