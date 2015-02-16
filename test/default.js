@@ -1,5 +1,6 @@
 
-    
+    Error.stackTraceLimit = Infinity;
+
     var   Class         = require('ee-class')
         , log           = require('ee-log')
         , assert        = require('assert');
@@ -210,7 +211,7 @@
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 11500
-                , minTime       = 10500
+                , minTime       = 10000
                 , capacity      = 60
                 , items         = 100
                 , errCount      = 0
@@ -222,29 +223,29 @@
             // wait fo rthe bucket
             this.timeout(15000);
 
-            setTimeout(function() {
-                log.warn(executed, errCount);
-            }, 12000);
-
 
             cb = function(err) {
-                var duration;
+                process.nextTick(function() {
+                    var duration;
 
-                if (err) errCount++;
+                    if (err) errCount++;
 
-                if (++executed === items) { 
-                    duration = Date.now()-start;
+                    if (++executed === items) { 
+                        duration = Date.now()-start;
 
-                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
-                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
-                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+errCount+' errros, it emitted '+expectedErrCount+' errors...');
+                        assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                        assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+                        assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+errCount+' errros, it emitted '+expectedErrCount+' errors...');
 
-                    done();
-                }                
+                        done();
+                    }
+                });                             
             }
 
 
+
             bucket = new LeakyBucket(capacity, 60, 10);
+
 
             while(iterator--) bucket.throttle().then(cb).catch(cb);
         });
