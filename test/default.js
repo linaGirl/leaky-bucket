@@ -173,7 +173,7 @@
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 11500
-                , minTime       = 10000
+                , minTime       = 10500
                 , capacity      = 60
                 , items         = 100
                 , iterator      = items
@@ -211,7 +211,7 @@
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 11500
-                , minTime       = 10000
+                , minTime       = 10500
                 , capacity      = 60
                 , items         = 100
                 , errCount      = 0
