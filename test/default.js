@@ -203,6 +203,48 @@
             while(iterator--) bucket.throttle(cb);
         });
 
+
+
+
+
+
+        it('should corectly handle the pause instruction', function(done) {
+            var   start         = Date.now()
+                , executed      = 0
+                , maxTime       = 8500
+                , minTime       = 7500
+                , capacity      = 60
+                , items         = 65
+                , iterator      = items
+                , cb, bucket;
+
+
+            // wait fo rthe bucket
+            this.timeout(15000);
+
+
+            cb = function() {
+                var duration;
+
+                if (++executed === items) { 
+                    duration = Date.now()-start;
+
+                    assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
+                    assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
+
+                    done();
+                }
+            }
+
+
+            bucket = new LeakyBucket(capacity, 60);
+
+            while(iterator--) bucket.throttle(cb);
+
+            bucket.pause(3);
+        });
+
+
     
 
 

@@ -90,7 +90,25 @@ Throttle an using Promises
     });
 
 
-### Flags
+### Pausing the leaky bucket
+
+You may pause the leaky bucket for any reason, this will remove items from the end if the wont be executed in time anymore.
+
+
+Pause the bucket for 5 seconds
+
+    bucket.pause(5);
+
+
+### Re-adding items
+
+You may want to re-add items the first position (next item to be executed). No support for promises here.
+
+
+    bucket.reAdd(cost, callback);
+
+
+## Flags
 
 You may start your app using the debug-leaky-bucket flag, this will enable logging for the module
 
