@@ -6,7 +6,7 @@
         , assert        = require('assert');
 
 
-    //process.env['debug-leaky-bucket'] = true;
+    // process.env['debug-leaky-bucket'] = true;
 
     var   LeakyBucket = require('../');
 
