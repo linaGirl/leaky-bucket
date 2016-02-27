@@ -46,7 +46,7 @@ You may also use an options object instead of the parameters
 
     var bucket = new LeakyBucket({
           capacity: 200         // items per interval, defaults to 60
-        , iterval: 30           // seconds, defaults to 60
+        , interval: 30          // seconds, defaults to 60
         , maxWaitingTime: 60    // seconds, defaults to 300
     });
 
