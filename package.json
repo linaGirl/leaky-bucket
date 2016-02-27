@@ -10,7 +10,7 @@
         , "type"                    : "git"
     }
     , "engines": {
-        "node"                      : ">=v0.10.17"
+        "node"                      : ">=v0.12"
     }
     , "bugs": {
         "url"                       : "https://github.com/eventEmitter/leaky-bucket/issues"
