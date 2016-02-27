@@ -2,7 +2,7 @@
 
 A fast and efficient leaky bucket implementation
 
-This module uses [sematic versioning](http://semver.org/)
+This module uses [semantic versioning](http://semver.org/)
 
 ## installation
 
@@ -46,7 +46,7 @@ You may also use an options object instead of the parameters
 
     var bucket = new LeakyBucket({
           capacity: 200         // items per interval, defaults to 60
-        , iterval: 30           // seconds, defaults to 60
+        , interval: 30          // seconds, defaults to 60
         , maxWaitingTime: 60    // seconds, defaults to 300
     });
 
@@ -59,7 +59,7 @@ The throttle accepts two parameters, of which both are optional
 - The first parameter can either be a callback function or the cost of the opertion
 - The seocnd parameter can be the callback function
 
-If you do not pass a callabck a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed becuas the max waiting time was exceeded.
+If you do not pass a callback a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed because the max waiting time was exceeded.
 
 
     bucktet.throttle([cost], callback);

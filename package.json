@@ -4,13 +4,13 @@
     , "version"                     : "0.2.7"
     , "homepage"                    : "https://github.com/eventEmitter/leaky-bucket"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)" 
-    , "licence"                     : "mit"
+    , "license"                     : "MIT"
     , "repository": {
           "url"                     : "https://github.com/eventEmitter/leaky-bucket.git"
         , "type"                    : "git"
     }
     , "engines": {
-        "node"                      : ">=v0.10.17"
+        "node"                      : ">=v0.12"
     }
     , "bugs": {
         "url"                       : "https://github.com/eventEmitter/leaky-bucket/issues"

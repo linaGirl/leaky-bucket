@@ -21,7 +21,7 @@
         });
 
 
-        it('should execute all items immediatelly if there is enough capacity', function(done) {
+        it('should execute all items immediately if there is enough capacity', function(done) {
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 900
@@ -54,7 +54,7 @@
 
 
 
-        it('should not execute all items immediatelly if there is not enough capacity I', function(done) {
+        it('should not execute all items immediately if there is not enough capacity I', function(done) {
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 12500
@@ -65,7 +65,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -91,7 +91,7 @@
 
 
 
-        it('should not execute all items immediatelly if there is not enough capacity II', function(done) {
+        it('should not execute all items immediately if there is not enough capacity II', function(done) {
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 10500
@@ -102,7 +102,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -131,7 +131,7 @@
 
 
 
-        it('should not execute all items immediatelly if there is not enough capacity III', function(done) {
+        it('should not execute all items immediately if there is not enough capacity III', function(done) {
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 5500
@@ -142,7 +142,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -180,7 +180,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -220,7 +220,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -234,7 +234,7 @@
 
                     assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
                     assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
-                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
+                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errors, it emitted '+errCount+' errors...');
 
                     done();
                 }
@@ -266,7 +266,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -280,7 +280,7 @@
 
                     assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
                     assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
-                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
+                    assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errors, it emitted '+errCount+' errors...');
 
                     done();
                 }
@@ -299,7 +299,7 @@
 
 
 
-        it('should corectly handle the pause instruction', function(done) {
+        it('should correctly handle the pause instruction', function(done) {
             var   start         = Date.now()
                 , executed      = 0
                 , maxTime       = 8500
@@ -310,7 +310,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -353,7 +353,7 @@
                 , cb, bucket;
 
 
-            // wait fo rthe bucket
+            // wait for the bucket
             this.timeout(15000);
 
 
@@ -368,7 +368,7 @@
 
                         assert(duration>=minTime, 'The leaky bucket finished too soon ('+duration+' < '+minTime+') ...');
                         assert(duration<maxTime, 'The leaky bucket finished too late ('+duration+' > '+maxTime+') ...');
-                        assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errros, it emitted '+errCount+' errors...');
+                        assert(errCount===expectedErrCount, 'The leaky bucket should have emitted '+expectedErrCount+' errors, it emitted '+errCount+' errors...');
 
                         done();
                     }
