@@ -108,6 +108,13 @@ You may want to re-add items the first position (next item to be executed). No s
     bucket.reAdd(cost, callback);
 
 
+### Removing left credits
+
+If you dont know how much an item costs in advance you may remove the cost afterwards using the pay method.
+
+    let limitReached = bucket.pay(345);
+
+
 ## Flags
 
 You may start your app using the debug-leaky-bucket flag, this will enable logging for the module
