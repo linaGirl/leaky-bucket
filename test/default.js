@@ -382,5 +382,22 @@
 
             while(iterator--) bucket.throttle().then(cb).catch(cb);
         });
+
+
+
+
+
+    
+
+
+
+        it('should return info about the counters', function() {            
+            var bucket = new LeakyBucket(100, 60, 10);
+            var info = bucket.getInfo();
+
+            assert.equal(info.left, 100);
+            assert.equal(info.capacity, 100);
+            assert.equal(info.interval, 60);
+        });
     });
     

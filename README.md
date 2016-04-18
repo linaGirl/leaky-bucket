@@ -115,6 +115,18 @@ If you dont know how much an item costs in advance you may remove the cost after
     let limitReached = bucket.pay(345);
 
 
+### Getting information from the bucket
+
+By calling the getInfo method the bucket returns information about its internals
+
+    bucket.getInfo();
+
+    {
+          left: 100
+        , interval: 60
+        , capacity: 100
+    }
+
 ## Flags
 
 You may start your app using the debug-leaky-bucket flag, this will enable logging for the module
