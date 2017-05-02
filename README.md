@@ -1,5 +1,7 @@
 # leaky-bucket
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/eventEmitter/leaky-bucket.svg)](https://greenkeeper.io/)
+
 A fast and efficient leaky bucket implementation
 
 This module uses [semantic versioning](http://semver.org/)
