@@ -56,8 +56,8 @@ You may also use an options object instead of the parameters
 
 The throttle accepts two parameters, of which both are optional
 
-- The first parameter can either be a callback function or the cost of the opertion
-- The seocnd parameter can be the callback function
+- The first parameter can either be a callback function or the cost of the operation
+- The second parameter can be the callback function
 
 If you do not pass a callback a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed because the max waiting time was exceeded.
 
