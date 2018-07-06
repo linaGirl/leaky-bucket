@@ -62,7 +62,7 @@ The throttle accepts two parameters, of which both are optional
 If you do not pass a callback a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed because the max waiting time was exceeded.
 
 
-    bucktet.throttle([cost], callback);
+    bucket.throttle([cost], callback);
 
 The cost parameter can be used to let items cost more than other. The cost of one item defaults to 1. If you execute an item with the cost of 2 it will use 2 slots instead of one.
 
