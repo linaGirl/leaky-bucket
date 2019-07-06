@@ -1,9 +1,9 @@
 {
     "name": "leaky-bucket",
     "description": "A fast and efficient leaky bucket implementation",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "homepage": "https://github.com/eventEmitter/leaky-bucket",
-    "author": "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)",
+    "author": "Lina van der Weg <lina@joinbox.com> (http://joinbox.com/)",
     "license": "MIT",
     "repository": {
         "url": "https://github.com/eventEmitter/leaky-bucket.git",
@@ -22,7 +22,7 @@
         "ee-types": "^2.1.4"
     },
     "devDependencies": {
-        "mocha": "2.x"
+        "mocha": "^6.1.4"
     },
     "optionalDependencies": {},
     "keywords": [
