@@ -70,12 +70,15 @@ export default class LeakyBucket {
     * @param {number} cost=1 the cost of the item to be throttled. is the cost is unknown, 
     *                        the cost can be payed after execution using the pay method.
     *                        defaults to 1.
-    * @param {number} append = true set to false if the item needs ot be added to the 
-    *                               beginning of the queue
+    * @param {boolean} append = true set to false if the item needs ot be added to the 
+    *                                beginning of the queue
+    * @param {boolean} isPause = false defines if the element is a pause elemtn, if yes, it 
+    *                                  will not be cleaned off of the queue when checking
+    *                                  for overflowing elements
     * @returns {promise} resolves when the item can be executed, rejects if the item cannot
     *                    be executed in time
     */
-    async throttle(cost = 1, append = true) {
+    async throttle(cost = 1, append = true, isPause = false) {
         const maxCurrentCapacity = this.getCurrentMaxCapacity();
 
         // if items are added at the beginning, the excess items will be remove
@@ -90,6 +93,7 @@ export default class LeakyBucket {
                 resolve,
                 reject,
                 cost,
+                isPause,
             };
 
             this.totalCost += cost;
@@ -315,9 +319,11 @@ export default class LeakyBucket {
         // reject all items that cannot be enqueued
         if (index >= 0) {
             this.queue.splice(index).forEach((item) => {
-                log.warn(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
-                item.reject(new Error(`Cannot throttle item because an item was added in front of it which caused the queue to overflow!`));
-                this.totalCost -= item.cost;
+                if (!item.isPause) {
+                    log.warn(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
+                    item.reject(new Error(`Cannot throttle item because an item was added in front of it which caused the queue to overflow!`));
+                    this.totalCost -= item.cost;
+                }
             });
         }
     }
@@ -348,7 +354,7 @@ export default class LeakyBucket {
     pauseByCost(cost) {
         this.stopTimer();
         log.debug(`Pausing bucket for ${cost} cost`);
-        this.throttle(cost, false);
+        this.throttle(cost, false, true);
     }
 
 
@@ -359,10 +365,24 @@ export default class LeakyBucket {
     * @param {number} seconds the number of seconds to pause the bucket by
     */
     pause(seconds = 1) {
+        this.drain();
         this.stopTimer();
         const cost = this.refillRate * seconds;
         log.debug(`Pausing bucket for ${seconds} seonds`);
         this.pauseByCost(cost);
+    }
+
+
+
+    /**
+    * drains the bucket, so that nothing can be exuted at the moment
+    *
+    * @private
+    */
+    drain() {
+        log.debug(`Draining the bucket, removing ${this.currentCapacity} from it, so that the current capacity is 0`);
+        this.currentCapacity = 0;
+        this.lastRefill = Date.now();
     }
 
 

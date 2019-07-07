@@ -95,4 +95,24 @@ section('Leaky Bucket', (section) => {
         assert(duration >= 1000);
         assert(duration < 1010);
     });
+
+
+    section.test('pausing the bucket', async() => {
+        const bucket = new LeakyBucket({
+            capacity: 60,
+            interval: 60,
+            timeout: 120,
+        });
+
+        const start = Date.now();
+
+        await bucket.throttle(10);
+        await bucket.throttle(10);
+        await bucket.pause(.5);
+        await bucket.throttle(.5);
+
+        const duration = Date.now() - start;
+        assert(duration >= 1000);
+        assert(duration < 1010);
+    });
 });
