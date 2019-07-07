@@ -313,11 +313,13 @@ export default class LeakyBucket {
 
 
         // reject all items that cannot be enqueued
-        this.queue.splice(index).forEach((item) => {
-            log.warn(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
-            item.reject(new Error(`Cannot throttle item because an item was added in front of it which caused the queue to overflow!`));
-            this.totalCost -= item.cost;
-        });
+        if (index >= 0) {
+            this.queue.splice(index).forEach((item) => {
+                log.warn(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
+                item.reject(new Error(`Cannot throttle item because an item was added in front of it which caused the queue to overflow!`));
+                this.totalCost -= item.cost;
+            });
+        }
     }
 
 
