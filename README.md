@@ -1,8 +1,16 @@
 # leaky-bucket
 
-A fast and efficient leaky bucket implementation
+A fast and efficient leaky bucket
 
-This module uses [semantic versioning](http://semver.org/)
+Leaky buckets are often used to rate limits calls to APIs. They can be used on the server, to make sure 
+the client does not send too many requests and on the client, to make sure to not to send too many
+requests to a server rate limiting using a leaky bucket. Leaky buckets are burstable: if a server lets a
+client send 10 requests per minute, it normally lets the user burst those 10 reuests. after that only one
+request per 6 seconds may be sent (60 seconds / 10 requests). If the user stops sending requests, the bucket 
+is filled up again so that the user may send a burst of requests again.
+
+
+ATTENTION: Version 3+ is a rewrite of this library, it makes use of es modules and thus needs to be started using the --experimental-modules flag in node 10 and 12.
 
 ## installation
 
@@ -13,169 +21,66 @@ This module uses [semantic versioning](http://semver.org/)
 [![Build Status](https://travis-ci.org/eventEmitter/leaky-bucket.png?branch=master)](https://travis-ci.org/eventEmitter/leaky-bucket)
 
 
-## usage
-
-    var LeakyBucket = require('leaky-bucket');
-
+## API
 
 ### Constructor
 
-The constructor accepts three parameters, all are optional
 
-    var instance = new LeakyBucket([capacity = 60]
-                                   [, Interval = 60]
-                                   [, maxWaitingTime = 300]);
+Sets up the leaky bucket. Accpets three optional options
 
+- capacity: this is the amount of items that may be processed per interval, if the items cost is 1 (which is the default)
+- interval: this is the interval, in which the capacity may be used
+- timeout: defines, how long it takes until items are rejected due to an overflow. defaults to the value of the interval, so that the overflow occurs at the same time the bucket is empty.
 
-Create a new leaky bucket which is allowed to execute 120 items per minute
 
-    var bucket = new LeakyBucket(120);
+```javascript
+import LeakyBucket from 'leaky-bucket';
 
+// a leaky bucket, that will burst 60 items, then will throttle the items to one per seond
+const bucket = new Bucket({
+    capacity: 60,
+    interval: 60,
+});
+```
 
-Create a new leaky bucket which is allowed to execute 200 items every 30 seconds
 
-    var bucket = new LeakyBucket(200, 30);
+### throttle
 
+The throttle method is used to delay items until the bucket leaks them, thus rate limiting them. If the bucket is overflowing, which is when items cannot be executed within the timeout, the throttle method will reject using an error.
 
-Create a new leaky bucket which is allowed to execute 200 items every 30 seconds with a maxWaitingTime of 60 seconds
+This method accepts two optional paramters:
 
-    var bucket = new LeakyBucket(200, 30, 60);
+- cost: the cost of the item, defaults to 1
+- append: if the ittem should be appended or added at the first position in the queue, defaults to true
 
+```javascript
+/// throttle an individual item
+await bucket.throttle();
+doThings();
 
-You may also use an options object instead of the parameters
+// Throttle aset of items, waiting for each one to complete, before it's added to the bucket
+for (const item of set.values()) {
+    await bucket.throttle();
 
-    var bucket = new LeakyBucket({
-          capacity: 200         // items per interval, defaults to 60
-        , interval: 30          // seconds, defaults to 60
-        , maxWaitingTime: 60    // seconds, defaults to 300
-    });
+    doThings();
+}
 
 
+// throttle items, add them to the bucket in paralle
+await Promise.all(Array.from(set).map(async(item) => {
+    await bucket.throttle();
 
-### Throttling
+    doThings();
+}));
 
-The throttle accepts two parameters, of which both are optional
 
-- The first parameter can either be a callback function or the cost of the operation
-- The second parameter can be the callback function
 
-If you do not pass a callback a promise is returned. The first argument of the callback is an error object (or the promise fails) if the item could not be executed because the max waiting time was exceeded.
+### pause
 
+The pause method can be use to pause the bucket for n seconds until it is allwed to resume.
 
-    bucktet.throttle([cost], callback);
 
-The cost parameter can be used to let items cost more than other. The cost of one item defaults to 1. If you execute an item with the cost of 2 it will use 2 slots instead of one.
+```javascript
+bucket.pause();
 
-
-Throttle an item
-
-    bucket.throttle(function(err) {
-        // do something
-    });
-
-
-Throttle an item with the cost of 10
-
-    bucket.throttle(10, function(err) {
-        // do something
-    });
-
-
-Throttle an using Promises
-
-    bucket.throttle().then(function() {
-        // ok, do your stuff ...
-    }).catch(function(err) {
-        // max waiting time exceeded, dont execute anything
-    });
-
-
-### Pausing the leaky bucket
-
-You may pause the leaky bucket for any reason, this will remove items from the end if the wont be executed in time anymore.
-
-
-Pause the bucket for 5 seconds
-
-    bucket.pause(5);
-
-
-### Re-adding items
-
-You may want to re-add items the first position (next item to be executed). No support for promises here.
-
-
-    bucket.reAdd(cost, callback);
-
-
-### Removing left credits
-
-If you dont know how much an item costs in advance you may remove the cost afterwards using the pay method.
-
-    let limitReached = bucket.pay(345);
-
-
-### Getting information from the bucket
-
-By calling the getInfo method the bucket returns information about its internals
-
-    bucket.getInfo();
-
-    {
-          left: 100
-        , interval: 60
-        , capacity: 100
-    }
-
-## Flags
-
-You may start your app using the debug-leaky-bucket flag, this will enable logging for the module
-
-    node . --debug-leaky-bucket
-
-
-## Examples
-
-Rate limit API calls on the client side, allowed are no more than 60 requests per minute
-
-    var   LeakyBucket = require('leaky-bucket')
-        , request     = require('request')
-        , bucket;
-
-
-    // create bucket instance, 60 request per minute
-    bucket = new LeakyBucket(60);
-
-
-    // this will throttle request if required
-    bucket.throttle(function() {
-
-        // execute request using the request module
-        request({
-              method: 'get'
-            , url: 'http://awesome.api/win'
-        }, function(err, response, body) {
-
-        });
-    });
-
-
-
-
-Rate limit API calls on the server side, allowed are no more than 60 requests per minute
-
-    var   LeakyBucket = require('leaky-bucket')
-        , request     = require('request')
-        , bucket;
-
-
-    // create bucket instance, 60 request per minute, max waiting time = 0
-    bucket = new LeakyBucket(60, 60, 0);
-
-
-    // this lets pass all request that are within the limit and fail all that
-    // exceed it
-    bucket.throttle(function(err) {
-        if (err) response.send(429, 'too many requests!');
-        else response.send(200, '{id:4, ...}')
-    });
+````

@@ -6,7 +6,7 @@ export default class LeakyBucket {
 
 
     /**
-    * Rets up the leaky bucket. The bucket is designed so that it can 
+    * Sets up the leaky bucket. The bucket is designed so that it can 
     * burst by the capacity it is given. after that items can be queued
     * until a timeout of n seonds is reached.
     *
@@ -31,9 +31,13 @@ export default class LeakyBucket {
     */
     constructor({
         capacity = 60,
-        timeout = 600,
+        timeout,
         interval = 60000,
     } = {}) {
+        // set the timeout to the interval if not set, so that the bucket overflows as soon
+        // the capacity is reached
+        if (isNaN(timeout)) timeout = interval;
+
         // queue containing all items to execute
         this.queue = [];
 
