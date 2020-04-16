@@ -1,5 +1,5 @@
-import logd from 'logd';
-const log = logd.module('leaky-bucket');
+import debug from 'debug
+const log = debug('leaky-bucket');
 
 
 export default class LeakyBucket {
@@ -84,7 +84,7 @@ export default class LeakyBucket {
         // if items are added at the beginning, the excess items will be remove
         // later on
         if (append && this.totalCost + cost > maxCurrentCapacity) {
-            log.warn(`Rejecting item because the bucket is over capacity! Current max capacity: ${maxCurrentCapacity}, Total cost of all queued items: ${this.totalCost}, item cost: ${cost}`);
+            debug(`Rejecting item because the bucket is over capacity! Current max capacity: ${maxCurrentCapacity}, Total cost of all queued items: ${this.totalCost}, item cost: ${cost}`);
             throw new Error(`Cannot throttle item, bucket is overflowing: the maximum capacity is ${maxCurrentCapacity}, the current total capacity is ${this.totalCost}!`);
         }
 
@@ -100,10 +100,10 @@ export default class LeakyBucket {
 
             if (append) {
                 this.queue.push(item); 
-                log.debug(`Appended an item with the cost of ${cost} to the queue`);
+                debug(`Appended an item with the cost of ${cost} to the queue`);
             } else {
                 this.queue.unshift(item);
-                log.debug(`Added an item to the start of the queue with the cost of ${cost} to the queue`);
+                debug(`Added an item to the start of the queue with the cost of ${cost} to the queue`);
                 this.cleanQueue();
             }
 
@@ -123,13 +123,13 @@ export default class LeakyBucket {
     startTimer() {
         if (!this.timer && this.queue.length > 0) {
             const item = this.getFirstItem();
-            log.debug(`Processing an item with the cost of ${item.cost}`);
+            debug(`Processing an item with the cost of ${item.cost}`);
 
             this.refill();
 
             if (this.currentCapacity >= item.cost) {
                 item.resolve();
-                log.info(`Resolved an item with the cost ${item.cost}`)
+                debug(`Resolved an item with the cost ${item.cost}`)
 
                 // remove the item from the queue
                 this.shiftQueue();
@@ -143,7 +143,7 @@ export default class LeakyBucket {
                 const requiredDelta = item.cost + (this.currentCapacity * -1);
                 const timeToDelta = requiredDelta / this.refillRate * 1000;
 
-                log.info(`Waiting ${timeToDelta} for topping up ${requiredDelta} capacity until the next item can be processed ...`);
+                debug(`Waiting ${timeToDelta} for topping up ${requiredDelta} capacity until the next item can be processed ...`);
                 // wait until the next item can be handled
                 this.timer = setTimeout(() => {
                     this.timer = 0;
@@ -195,7 +195,7 @@ export default class LeakyBucket {
     * ends the bucket. The bucket may be recycled after this call
     */
     end() {
-        log.warn(`Ending bucket!`);
+        debug(`Ending bucket!`);
         this.stopTimer();
         this.clear();
     }
@@ -208,7 +208,7 @@ export default class LeakyBucket {
     * @privae
     */
     clear() {
-        log.debug(`Resetting queue`);
+        debug(`Resetting queue`);
         this.queue = [];
     }
 
@@ -221,7 +221,7 @@ export default class LeakyBucket {
     * @param {number} cost the ost to pay
     */
     pay(cost) {
-        log.debug(`Paying ${cost}`);
+        debug(`Paying ${cost}`);
 
         // reduce the current capacity, so that bursts
         // as calculated correctly
@@ -247,7 +247,7 @@ export default class LeakyBucket {
     */
     stopTimer() {
         if (this.timer) {
-            log.debug(`Stopping timer`);
+            debug(`Stopping timer`);
             clearTimeout(this.timer);
             this.timer = null;
         }
@@ -269,13 +269,13 @@ export default class LeakyBucket {
             // refill the currently avilable capacity
             const refillAmount = ((Date.now() - this.lastRefill) / 1000) * this.refillRate;
             this.currentCapacity += refillAmount;
-            log.debug(`Refilled the bucket with ${refillAmount}, last refill was ${this.lastRefill}, current Date is ${Date.now()}, diff is ${(Date.now() - this.lastRefill)} msec`);
+            debug(`Refilled the bucket with ${refillAmount}, last refill was ${this.lastRefill}, current Date is ${Date.now()}, diff is ${(Date.now() - this.lastRefill)} msec`);
 
             // make sure, that no more capacity is added than is the maximum
             if (this.currentCapacity >= this.capacity) {
                 this.currentCapacity = this.capacity;
                 this.lastRefill = null;
-                log.debug(`Buckets capacity is fully recharged`);
+                debug(`Buckets capacity is fully recharged`);
             } else {
                 // date of last refill, ued for the next refill
                 this.lastRefill = Date.now();
@@ -320,7 +320,7 @@ export default class LeakyBucket {
         if (index >= 0) {
             this.queue.splice(index).forEach((item) => {
                 if (!item.isPause) {
-                    log.warn(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
+                    debug(`Rejecting item with a cost of ${item.cost} because an item was added in front of it!`);
                     item.reject(new Error(`Cannot throttle item because an item was added in front of it which caused the queue to overflow!`));
                     this.totalCost -= item.cost;
                 }
@@ -353,7 +353,7 @@ export default class LeakyBucket {
     */
     pauseByCost(cost) {
         this.stopTimer();
-        log.debug(`Pausing bucket for ${cost} cost`);
+        debug(`Pausing bucket for ${cost} cost`);
         this.throttle(cost, false, true);
     }
 
@@ -368,7 +368,7 @@ export default class LeakyBucket {
         this.drain();
         this.stopTimer();
         const cost = this.refillRate * seconds;
-        log.debug(`Pausing bucket for ${seconds} seonds`);
+        debug(`Pausing bucket for ${seconds} seonds`);
         this.pauseByCost(cost);
     }
 
@@ -380,7 +380,7 @@ export default class LeakyBucket {
     * @private
     */
     drain() {
-        log.debug(`Draining the bucket, removing ${this.currentCapacity} from it, so that the current capacity is 0`);
+        debug(`Draining the bucket, removing ${this.currentCapacity} from it, so that the current capacity is 0`);
         this.currentCapacity = 0;
         this.lastRefill = Date.now();
     }
@@ -394,7 +394,7 @@ export default class LeakyBucket {
     * @param {number} timeout in seonds
     */
     setTimeout(timeout) {
-        log.debug(`the buckets timeout is now ${timeout}`);
+        debug(`the buckets timeout is now ${timeout}`);
         this.timeout = timeout;
         this.updateVariables();
         return this;
@@ -407,7 +407,7 @@ export default class LeakyBucket {
     * @param {number} interval in seonds
     */
     setInterval(interval) {
-        log.debug(`the buckets interval is now ${interval}`);
+        debug(`the buckets interval is now ${interval}`);
         this.interval = interval;
         this.updateVariables();
         return this;
@@ -420,7 +420,7 @@ export default class LeakyBucket {
     * @param {number} capacity
     */
     setCapacity(capacity) {
-        log.debug(`the buckets capacity is now ${capacity}`);
+        debug(`the buckets capacity is now ${capacity}`);
         this.capacity = capacity;
         this.updateVariables();
         return this;
@@ -441,7 +441,7 @@ export default class LeakyBucket {
         // the rate, at which the leaky bucket is filled per second
         this.refillRate = (this.capacity || 1) / (this.interval || 1);
 
-        log.debug(`the buckets max capacity is now ${this.maxCapacity}`);
-        log.debug(`the buckets refill rate is now ${this.refillRate}`);
+        debug(`the buckets max capacity is now ${this.maxCapacity}`);
+        debug(`the buckets refill rate is now ${this.refillRate}`);
     }
 }
