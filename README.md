@@ -62,14 +62,14 @@ cost is 1.
 The interval defines, how much seconds it takes to refill the bucket to 
 its full capacity. The bucket is not filled every interval, but continously.
 
-#### option timeout
+#### option: timeout
 
 Normally, the bucket will throw errors when the throttle() method is called
 when the bucket is empty. When a timeout is defined, the bucket will queue 
 items as long they can be executed within the timeout. Defaults to 0, which 
 will not queue any items if the bucket is empty.
 
-#### option initialCapacity
+#### option: initialCapacity
 
 Some rate limited services will start out with an empty bucket, or refill
 the bucket not continusly but in an interval. This option can be used to 
@@ -77,13 +77,13 @@ set a starting capacity beween 0 and the configured capacity. If set to 0
 and a request shall be processed immediately and the timeout is 0, the 
 bucket will reject the request.
 
-#### idleTimeout
+#### option: idleTimeout
 
 If this option is set, the bucket will emti a idleTimeout event after the
 bucket is filled completely and no requests are waiting. Configured in 
 milliseconds.
 
-#### debug
+#### option: debug
 
 If set to true, the bucket will print debug logs using console.log()
 
