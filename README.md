@@ -18,12 +18,11 @@ up again so that the user may send a burst of requests again.
 New in Version 4:
 - dropped node.js support for node <12 (es modules)
 - works now in modern browsers too (removed node.js dependencies)
-- added a debug flag to the constructo
+- added a debug flag to the constructor
 - added idleTimeout event and constructor flag
 - added the initalCapacity option to the constructor
-- added the canExecuteNow method
-- added the getCapacity method
-- added the getCurrentCapacity method
+- added the getCapacity() method
+- added the getCurrentCapacity() method
 
 
 ## installation
@@ -123,7 +122,7 @@ await Promise.all(Array.from(set).map(async(item) => {
 ````
 
 
-### pause(seconds)
+### bucket.pause(seconds)
 
 The pause method can be use to pause the bucket for n seconds. Same as the throttle call but does not throw errors when the bucket is over its capacity.
 
@@ -135,7 +134,7 @@ bucket.pause(2);
 ````
 
 
-### pauseByCost(cost)
+### bucket.pauseByCost(cost)
 
 The pause method can be use to pause the bucket for a specific cost. Same as the throttle call but does not throw errors when the bucket is over its capacity.
 
@@ -146,7 +145,7 @@ bucket.pauseByCost(300);
 ````
 
 
-### pay(cost)
+### bucket.pay(cost)
 
 Removes the defined cost from the bucket without taking any action. Reduces the current capacity.
 
@@ -157,7 +156,7 @@ bucket.pay(cost);
 ````
 
 
-### end()
+### bucket.end()
 
 Shuts down the bucket, clears all timers. Removes all pending items wihtout executing them. The bucket cannot be reused thereafter!
 
@@ -167,7 +166,7 @@ bucket.end();
 ````
 
 
-### getCapacity()
+### bucket.getCapacity()
 
 Returns the total capacity of the bucket.
 
@@ -177,7 +176,7 @@ const capacity = bucket.getCapacity();
 ````
 
 
-### getCurrentCapacity()
+### bucket.getCurrentCapacity()
 
 Returns the current capacity of the bucket.
 
@@ -186,7 +185,7 @@ Returns the current capacity of the bucket.
 const currentCapacity = bucket.getCurrentCapacity();
 ````
 
-### setTimeout(seconds)
+### bucket.setTimeout(seconds)
 
 Sets the amount of seconds the bucket queue items before it starts to reject them. Same as the timeout option in the constructor
 
@@ -195,7 +194,7 @@ Sets the amount of seconds the bucket queue items before it starts to reject the
 bucket.setTimeout(300);
 ````
 
-### setInterval(seconds)
+### bucket.setInterval(seconds)
 
 Sets the interval it takes to refill the bucket completely. Same as the interval option in the constructor
 
@@ -204,7 +203,7 @@ Sets the interval it takes to refill the bucket completely. Same as the interval
 bucket.setInterval(60);
 ````
 
-### setCapacity(capacity)
+### bucket.setCapacity(capacity)
 
 Sets the capacity of the bucket. Same as the capacity option in the constructor
 
@@ -215,7 +214,7 @@ bucket.setTimeout(1000);
 
 
 
-### event 'idleTimeout'
+### Event bucket.on('idleTimeout')
 
 This event is emitted, if the bucket is at full capacity and idle for N milliseconds
 
@@ -236,7 +235,7 @@ bucket.off('idleTimeout');
 
 
 
-### event 'idle'
+### Event bucket.on('idle')
 
 This event is emitted, when the bucket is idle, thus no items are waiting to be executed.
 
