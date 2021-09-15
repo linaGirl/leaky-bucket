@@ -1,7 +1,7 @@
 {
     "name": "leaky-bucket",
     "description": "A fast and efficient leaky bucket implementation",
-    "version": "3.0.4",
+    "version": "4.0.0",
     "homepage": "https://github.com/linaGirl/leaky-bucket",
     "author": "Lina van der Weg <lina@vanderweg.ch> (http://vanderweg.ch/)",
     "license": "MIT",
