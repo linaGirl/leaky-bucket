@@ -222,7 +222,6 @@ This event is emitted, if the bucket is at full capacity and idle for N millisec
 const bucket = new Bucket({
     capacity: 60,
     interval: 60,
-    idleTimeout: 2000,
 });
 
 bucket.on('idleTimeout', (bucketInstance) => {
@@ -243,8 +242,6 @@ This event is emitted, when the bucket is idle, thus no items are waiting to be 
 const bucket = new Bucket({
     capacity: 60,
     interval: 60,
-    idleTimeout: 2000,
-});
 
 bucket.on('idle', (bucketInstance) => {
     console.log('bucket is idling');
@@ -254,7 +251,28 @@ bucket.on('idle', (bucketInstance) => {
 bucket.off('idle');
 ````
 
+### bucket.off(eventName, optional handler)
 
+Removes all or one listeners for an event
+
+```javascript
+const bucket = new Bucket({
+    capacity: 60,
+    interval: 60,
+});
+
+// remove all listeners for the idle event
+bucket.off('idle')
+
+const listener = (bucketInstance) => {
+    console.log(bucketInstance.getCurrentCapacity());
+}
+
+bucket.on('idle', listener);
+
+// remove one specific listener
+bucket.off('idle', listener);
+````
 
 
 ## Browser
