@@ -137,7 +137,7 @@ bucket.off('idleTimeout');
 
 ## Browser
 
-The bucket can used in the browser. Import `src/LeakyBucket.js` for tht usecase.
+The bucket can used in the Browser. Import `src/LeakyBucket.js` for that usecase.
 
 
 ## Debugging
