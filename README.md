@@ -48,8 +48,8 @@ const bucket = new Bucket({
 
 The capacity defines how many requests may be sent oer interval. If the
 capacity is 100 and the interval is 60 seconds and a request has a cost
-of 1, every 60 seconds 1000 request may be processed. If the request 
-cost is 4, jsut 25 requests may be processed every 60 seconds.
+of 1, every 60 seconds 100 request may be processed. If the request 
+cost is 4, just 25 requests may be processed every 60 seconds (100/4 = 25).
 
 The complete capacity can be used in a burst. This means for the example
 above, 100 requests can be processed immediately. Thereafter every request
